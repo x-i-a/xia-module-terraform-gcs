@@ -14,6 +14,6 @@ variable "applications_file" {
 }
 
 variable "github_provider_sa_dict" {
-  type = map(any)
-  description = "Github providers service account list"
+  type = map(map(string))
+  description = "Github providers service account dict"
 }
