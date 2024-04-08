@@ -1,3 +1,8 @@
 xia-module:
   package: xia-module
   class: Module
+module-pypi:
+  package: xia-module-pypi
+  class: Pypi
+  events:
+    deploy:
