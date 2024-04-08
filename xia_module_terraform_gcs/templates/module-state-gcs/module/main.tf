@@ -1,2 +1,1 @@
-locals {
-}
+provider "google" {}
