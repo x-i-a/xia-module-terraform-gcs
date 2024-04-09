@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    github = {
+      source  = "integrations/github"
+    }
+  }
+}
+
 locals {
   project = yamldecode(file(var.project_file))
   landscape = yamldecode(file(var.landscape_file))
@@ -30,6 +38,16 @@ locals {
       }
     ]
   ]))
+}
+
+
+resource "github_actions_environment_variable" "action_var_tf_bucket" {
+  for_each = { for s in local.all_pool_settings : "${s.app_name}-${s.env_name}" => s }
+
+  repository       = each.value["repository_name"]
+  environment      = each.value["env_name"]
+  variable_name    = "TF_BUCKET_NAME"
+  value            = local.tf_bucket_name
 }
 
 resource "google_storage_bucket_iam_member" "tfstate_bucket_modify" {
