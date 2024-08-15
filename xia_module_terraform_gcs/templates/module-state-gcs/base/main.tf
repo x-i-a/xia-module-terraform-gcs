@@ -3,6 +3,6 @@ terraform {
   }
 }
 
-module "gcp_module_dataset" {
+module "module_state_gcs" {
   source = "../../modules/module-state-gcs"
 }
