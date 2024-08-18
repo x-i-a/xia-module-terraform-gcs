@@ -7,42 +7,24 @@ terraform {
 }
 
 locals {
-  project = yamldecode(file(var.project_file))
-  landscape = yamldecode(file(var.landscape_file))
-  applications = yamldecode(file(var.applications_file))
+  module_name = coalesce(var.module_name, substr(basename(path.module), 9, length(basename(path.module)) - 9))
+
+  landscape = var.landscape
+  applications = var.applications
   settings = lookup(local.landscape, "settings", {})
   cosmos_name = local.settings["cosmos_name"]
+  tf_bucket_name = local.settings["cosmos_name"]
   realm_name = local.settings["realm_name"]
   foundation_name = local.settings["foundation_name"]
-  tf_bucket_name = lookup(local.settings, "cosmos_name")
-  folder_id = lookup(local.project, "folder_id", null)
-  project_prefix = local.project["project_prefix"]
-  billing_account = local.project["billing_account"]
-  environment_dict = local.landscape["environments"]
-  activated_apps = lookup(lookup(local.landscape["modules"], "gcp-module-project", {}), "applications", [])
-}
+  environment_dict = var.environment_dict
 
-locals {
-  filtered_applications = { for app_name, app in local.applications : app_name => app if contains(local.activated_apps, app_name) }
-
-  all_pool_settings = toset(flatten([
-    for app_name, app in local.filtered_applications : [
-      for env_name, env in local.environment_dict : {
-        app_name          = app_name
-        env_name          = env_name
-        repository_owner  = app["repository_owner"]
-        repository_name   = app["repository_name"]
-        project_id        = "${local.project_prefix}${env_name}"
-        match_branch      = env["match_branch"]
-        match_event       = lookup(env, "match_event", "push")
-      }
-    ]
-  ]))
+  app_to_activate = lookup(var.module_app_to_activate, local.module_name, [])
+  app_configuration = { for k, v in var.app_env_config : k => v if contains(local.app_to_activate, v["app_name"]) }
 }
 
 
 resource "github_actions_environment_variable" "action_var_tf_bucket" {
-  for_each = { for s in local.all_pool_settings : "${s.app_name}-${s.env_name}" => s }
+  for_each = app_configuration
 
   repository       = each.value["repository_name"]
   environment      = each.value["env_name"]
@@ -51,7 +33,7 @@ resource "github_actions_environment_variable" "action_var_tf_bucket" {
 }
 
 resource "google_storage_bucket_iam_member" "tfstate_bucket_modify" {
-  for_each = { for s in local.all_pool_settings : "${s.app_name}-${s.env_name}" => s }
+  for_each = app_configuration
   bucket = local.tf_bucket_name
   role   = "roles/storage.objectAdmin"
   member = "serviceAccount:${var.github_provider_sa_dict[each.key].email}"
