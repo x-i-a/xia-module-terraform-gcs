@@ -24,7 +24,7 @@ locals {
 
 
 resource "github_actions_environment_variable" "action_var_tf_bucket" {
-  for_each = app_configuration
+  for_each = local.app_configuration
 
   repository       = each.value["repository_name"]
   environment      = each.value["env_name"]
@@ -33,7 +33,7 @@ resource "github_actions_environment_variable" "action_var_tf_bucket" {
 }
 
 resource "google_storage_bucket_iam_member" "tfstate_bucket_modify" {
-  for_each = app_configuration
+  for_each = local.app_configuration
   bucket = local.tf_bucket_name
   role   = "roles/storage.objectAdmin"
   member = "serviceAccount:${var.github_provider_sa_dict[each.key].email}"
