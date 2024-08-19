@@ -1,5 +1,5 @@
 module "module_state_gcs" {
-  source = "../../modules/activate-module-state-gcs"
+  source = "../../modules/module-state-gcs"
 
   config_file = "../../../config/core/tfstate.yaml"
   landscape = local.landscape
