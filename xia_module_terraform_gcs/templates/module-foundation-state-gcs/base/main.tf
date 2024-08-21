@@ -1,4 +1,4 @@
-module "module_state_gcs" {
+module "module_foundation_state_gcs" {
   source = "../../modules/module-foundation-state-gcs"
 
   config_file = "../../../config/core/tfstate.yaml"
