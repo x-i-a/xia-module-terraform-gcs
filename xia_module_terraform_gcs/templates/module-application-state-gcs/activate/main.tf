@@ -12,7 +12,6 @@ locals {
   tf_bucket_name = local.tfstate_config["tf_bucket"]
 }
 
-
 resource "google_storage_bucket_iam_member" "tfstate_bucket_admin" {
   for_each = var.foundations
   bucket = local.tf_bucket_name
