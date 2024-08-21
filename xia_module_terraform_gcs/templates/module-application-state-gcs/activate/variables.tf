@@ -19,3 +19,13 @@ variable "modules" {
   type = any
   description = "Module Configuration"
 }
+
+variable "foundations" {
+  type = map(any)
+  description = "Foundation Configuration"
+}
+
+variable "foundation_admin_sa" {
+  type = map(map(any))
+  description = "Foundation admin service account dict"
+}
