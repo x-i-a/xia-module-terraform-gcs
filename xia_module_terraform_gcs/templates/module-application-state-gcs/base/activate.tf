@@ -1,6 +1,7 @@
 module "activate_module_application_state_gcs" {
   source = "../../modules/activate-module-application-state-gcs"
 
+  config_file = "../../../config/core/tfstate.yaml"
   landscape = local.landscape
   modules   = local.modules
   foundations = local.foundations
