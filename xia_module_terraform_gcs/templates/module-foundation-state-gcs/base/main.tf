@@ -6,6 +6,6 @@ module "module_state_gcs" {
   modules = local.modules
   foundations = local.foundations
 
-  github_provider_sa_dict = module.gcp_module_organization.github_provider_sa
+  foundation_admin_sa = module.gcp_module_organization.foundation_admin_sa
   depends_on = [module.gcp_module_organization]
 }

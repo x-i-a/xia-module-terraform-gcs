@@ -25,7 +25,7 @@ variable "foundations" {
   description = "Foundation Configuration"
 }
 
-variable "github_provider_sa_dict" {
+variable "foundation_admin_sa" {
   type = map(map(any))
-  description = "Github providers service account dict"
+  description = "Foundation admin service account dict"
 }

@@ -16,14 +16,14 @@ resource "google_storage_bucket_iam_member" "tfstate_bucket_list" {
   for_each = var.foundations
   bucket = local.tf_bucket_name
   role   = "roles/storage.objectViewer"
-  member = "serviceAccount:${var.github_provider_sa_dict[each.key].email}"
+  member = "serviceAccount:${var.foundation_admin_sa[each.key].email}"
 }
 
 resource "google_storage_bucket_iam_member" "tfstate_bucket_modify" {
   for_each = var.foundations
   bucket = local.tf_bucket_name
   role   = "roles/storage.objectAdmin"
-  member = "serviceAccount:${var.github_provider_sa_dict[each.key].email}"
+  member = "serviceAccount:${var.foundation_admin_sa[each.key].email}"
 
   condition {
     title       = "PrefixCondition"
