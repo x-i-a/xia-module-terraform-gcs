@@ -1,4 +1,18 @@
+provider "google" {
+  alias = "app-state-gcs"
+}
+
+provider "github" {
+  alias = "app-state-gcs"
+  owner = lookup(yamldecode(file("../../../config/core/github.yaml")), "github_owner", null)
+}
+
 module "module_application_state_gcs" {
+  providers = {
+    google = google.app-state-gcs
+    github = github.app-state-gcs
+  }
+
   source = "../../modules/module-application-state-gcs"
 
   config_file = "../../../config/core/tfstate.yaml"
