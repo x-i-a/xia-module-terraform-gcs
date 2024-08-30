@@ -23,16 +23,17 @@ locals {
   environment_dict = var.environment_dict
 
   app_to_activate = lookup(var.module_app_to_activate, local.module_name, [])
+  app_tf_config = { for app in local.app_to_activate : app => local.tf_bucket_name }
   app_configuration = { for k, v in var.app_env_config : k => v if contains(local.app_to_activate, v["app_name"]) }
 }
 
 
 resource "github_actions_variable" "action_var_tf_bucket" {
-  for_each = local.applications
+  for_each = local.app_tf_config
 
-  repository       = each.value["repository_name"]
+  repository       = local.applications[each.key]["repository_name"]
   variable_name    = "TF_BUCKET_NAME"
-  value            = local.tf_bucket_name
+  value            = each.value
 }
 
 resource "google_storage_bucket_iam_member" "tfstate_bucket_list" {
