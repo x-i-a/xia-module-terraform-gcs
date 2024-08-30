@@ -28,7 +28,7 @@ locals {
 
 
 resource "github_actions_variable" "action_var_tf_bucket" {
-  for_each = local.app_configuration
+  for_each = local.applications
 
   repository       = each.value["repository_name"]
   variable_name    = "TF_BUCKET_NAME"
