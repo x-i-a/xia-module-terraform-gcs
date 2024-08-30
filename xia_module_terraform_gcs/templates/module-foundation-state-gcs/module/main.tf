@@ -15,6 +15,14 @@ locals {
   tf_bucket_name = local.tfstate_config["tf_bucket"]
 }
 
+resource "github_actions_variable" "action_var_tf_bucket" {
+  for_each = var.foundations
+
+  repository       = each.value["repository_name"]
+  variable_name    = "TF_BUCKET_NAME"
+  value            = local.tf_bucket_name
+}
+
 resource "google_storage_bucket_iam_member" "tfstate_bucket_list" {
   for_each = var.foundations
   bucket = local.tf_bucket_name
