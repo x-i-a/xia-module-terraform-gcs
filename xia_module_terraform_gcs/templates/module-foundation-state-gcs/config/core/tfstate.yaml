@@ -1,2 +1,2 @@
-# backend: gcs
-tf_bucket:
+backend: gcs
+# tf_bucket:
