@@ -20,7 +20,7 @@ locals {
   reversed_bucket_config = merge(flatten([
     for name, config in local.bucket_config : [
       for path in lookup(config, "bucket_orgs", []) : {
-        (path) = name
+        path = name
       }
     ]
   ]))
