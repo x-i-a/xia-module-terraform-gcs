@@ -15,12 +15,34 @@ locals {
   tf_bucket_name = local.tfstate_config["tf_bucket"]
 }
 
+locals {
+  bucket_config = lookup(local.tfstate_config, "org_buckets", {})
+  reversed_bucket_config = merge(flatten([
+    for name, config in local.bucket_config : [
+      for path in lookup(config, "bucket_orgs", []) : {
+        (path) = name
+      }
+    ]
+  ]))
+  org_bucket_dict = {
+    for path, config in var.foundations : path => merge(
+      config,
+      {
+        bucket_name = local.reversed_bucket_config[
+          [for k in keys(local.reversed_bucket_config) : k if keystartswith(key, k)][0]
+        ]
+      }
+    )
+  }
+}
+
 resource "github_actions_variable" "action_var_tf_bucket" {
   for_each = var.foundations
 
   repository       = each.value["repository_name"]
   variable_name    = "TF_BUCKET_NAME"
-  value            = local.tf_bucket_name
+  # value            = local.tf_bucket_name
+  value            = local.org_bucket_dict[each.key]
 }
 
 resource "google_storage_bucket_iam_member" "tfstate_bucket_list" {
