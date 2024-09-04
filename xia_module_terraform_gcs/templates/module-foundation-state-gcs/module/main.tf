@@ -17,13 +17,13 @@ locals {
 
 locals {
   bucket_config = lookup(local.tfstate_config, "org_buckets", {})
-  reversed_bucket_config = flatten([
+  _reversed_bucket_config = merge(flatten([
     for name, config in local.bucket_config : [
       for path in lookup(config, "bucket_orgs", []) : {
         path = name
       }
     ]
-  ])
+  ])...)
 
   org_bucket_dict = {
     for path, config in var.foundations : path => merge(
