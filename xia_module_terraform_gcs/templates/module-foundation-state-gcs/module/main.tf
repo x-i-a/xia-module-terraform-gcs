@@ -17,7 +17,7 @@ locals {
 
 locals {
   bucket_config = lookup(local.tfstate_config, "org_buckets", {})
-  _reversed_bucket_config = merge(flatten([
+  reversed_bucket_config = merge(flatten([
     for name, config in local.bucket_config : [
       for path in lookup(config, "bucket_orgs", []) : {
         path = name
