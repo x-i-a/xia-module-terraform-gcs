@@ -24,9 +24,9 @@ locals {
   ])...)
   org_bucket_dict = {
     for path, config in var.foundations : path => {
-      bucket_name = local.reversed_bucket_config[
+      bucket_name = try(local.reversed_bucket_config[
         reverse(sort([for k in keys(local.reversed_bucket_config) : k if startswith(path, k)]))[0]
-      ]
+      ], local.tf_bucket_name)
     }
   }
 }
