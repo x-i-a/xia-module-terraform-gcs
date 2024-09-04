@@ -30,7 +30,7 @@ locals {
 
 resource "null_resource" "example" {
   provisioner "local-exec" {
-    command = "echo Variable value is: ${local.reversed_bucket_config}"
+    command = "echo Variable value is: ${jsonencode(local.reversed_bucket_config)}"
   }
 }
 
