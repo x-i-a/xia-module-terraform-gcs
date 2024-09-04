@@ -25,15 +25,12 @@ locals {
     ]
   ])...)
 
-  org_bucket_dict = {
-    for path, config in var.foundations : path => merge(
-      config,
-      {
-        bucket_name = local.reversed_bucket_config[
-          [for k in keys(local.reversed_bucket_config) : k if startswith(path, k)][0]
-        ]
-      }
-    )
+
+}
+
+resource "null_resource" "example" {
+  provisioner "local-exec" {
+    command = "echo Variable value is: ${local.reversed_bucket_config}"
   }
 }
 
@@ -42,8 +39,8 @@ resource "github_actions_variable" "action_var_tf_bucket" {
 
   repository       = each.value["repository_name"]
   variable_name    = "TF_BUCKET_NAME"
-  # value            = local.tf_bucket_name
-  value            = local.org_bucket_dict[each.key]
+  value            = local.tf_bucket_name
+  # value            = local.org_bucket_dict[each.key]
 }
 
 resource "google_storage_bucket_iam_member" "tfstate_bucket_list" {
