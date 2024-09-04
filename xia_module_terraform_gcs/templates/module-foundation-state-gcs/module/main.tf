@@ -29,7 +29,7 @@ locals {
       config,
       {
         bucket_name = local.reversed_bucket_config[
-          [for k in keys(local.reversed_bucket_config) : k if keystartswith(key, k)][0]
+          [for k in keys(local.reversed_bucket_config) : k if startswith(path, k)][0]
         ]
       }
     )
