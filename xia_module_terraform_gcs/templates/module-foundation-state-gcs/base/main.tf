@@ -23,3 +23,7 @@ module "module_foundation_state_gcs" {
   foundation_admin_sa = module.gcp_module_organization.foundation_admin_sa
   depends_on = [module.gcp_module_organization]
 }
+
+output "reversed_bucket_config" {
+  value = module.module_foundation_state_gcs.reversed_bucket_config
+}

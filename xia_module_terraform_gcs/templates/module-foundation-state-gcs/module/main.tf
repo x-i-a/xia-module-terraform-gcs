@@ -24,10 +24,8 @@ locals {
   ])...)
 }
 
-resource "null_resource" "example" {
-  provisioner "local-exec" {
-    command = "echo Variable value is : ${jsonencode(local.reversed_bucket_config)}"
-  }
+output "reversed_bucket_config" {
+  value = local.reversed_bucket_config
 }
 
 resource "github_actions_variable" "action_var_tf_bucket" {
