@@ -31,17 +31,14 @@ locals {
   }
 }
 
-output "org_bucket_dict" {
-  value = local.org_bucket_dict
-}
 
 resource "github_actions_variable" "action_var_tf_bucket" {
   for_each = var.foundations
 
   repository       = each.value["repository_name"]
   variable_name    = "TF_BUCKET_NAME"
-  value            = local.tf_bucket_name
-  # value            = local.org_bucket_dict[each.key]
+  # value            = local.tf_bucket_name
+  value            = local.org_bucket_dict[each.key]
 }
 
 resource "google_storage_bucket_iam_member" "tfstate_bucket_list" {

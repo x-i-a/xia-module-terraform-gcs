@@ -23,7 +23,3 @@ module "module_foundation_state_gcs" {
   foundation_admin_sa = module.gcp_module_organization.foundation_admin_sa
   depends_on = [module.gcp_module_organization]
 }
-
-output "org_bucket_dict" {
-  value = module.module_foundation_state_gcs.org_bucket_dict
-}
