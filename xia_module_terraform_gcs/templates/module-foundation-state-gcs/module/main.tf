@@ -22,10 +22,17 @@ locals {
       for path in lookup(config, "bucket_orgs", []) : zipmap([path], [name])
     ]
   ])...)
+  org_bucket_dict = {
+    for path, config in var.foundations : path => {
+      bucket_name = local.reversed_bucket_config[
+        [for k in keys(local.reversed_bucket_config) : k if startswith(path, k)][0]
+      ]
+    }
+  }
 }
 
-output "reversed_bucket_config" {
-  value = local.reversed_bucket_config
+output "org_bucket_dict" {
+  value = local.org_bucket_dict
 }
 
 resource "github_actions_variable" "action_var_tf_bucket" {

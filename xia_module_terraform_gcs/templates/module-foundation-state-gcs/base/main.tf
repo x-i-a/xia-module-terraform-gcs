@@ -24,6 +24,6 @@ module "module_foundation_state_gcs" {
   depends_on = [module.gcp_module_organization]
 }
 
-output "reversed_bucket_config" {
-  value = module.module_foundation_state_gcs.reversed_bucket_config
+output "org_bucket_dict" {
+  value = module.module_foundation_state_gcs.org_bucket_dict
 }
