@@ -22,13 +22,11 @@ locals {
       for path in lookup(config, "bucket_orgs", []) : zipmap([path], [name])
     ]
   ])...)
-
-
 }
 
 resource "null_resource" "example" {
   provisioner "local-exec" {
-    command = "echo Variable value is: ${jsonencode(local.reversed_bucket_config)}"
+    command = "echo Variable value is : ${jsonencode(local.reversed_bucket_config)}"
   }
 }
 
