@@ -13,6 +13,7 @@ locals {
   module_name = coalesce(var.module_name, basename(path.module))
   tfstate_config = yamldecode(file(var.config_file))
   tf_bucket_name = local.tfstate_config["tf_bucket"]
+  cosmos_project = var.landscape["settings"]["cosmos_project"]
 }
 
 locals {
@@ -31,26 +32,37 @@ locals {
   }
 }
 
+resource "google_storage_bucket" "foundation_buckets" {
+  for_each = local.bucket_config
+
+  project = local.cosmos_project
+  name = each.key
+  location = lookup(each.value, "bucket_region", "eu")
+  force_destroy = false
+}
 
 resource "github_actions_variable" "action_var_tf_bucket" {
   for_each = var.foundations
 
   repository       = each.value["repository_name"]
   variable_name    = "TF_BUCKET_NAME"
-  # value            = local.tf_bucket_name
   value            = local.org_bucket_dict[each.key]["bucket_name"]
 }
 
 resource "google_storage_bucket_iam_member" "tfstate_bucket_list" {
   for_each = var.foundations
-  bucket = local.tf_bucket_name
+
+  project = local.cosmos_project
+  bucket = local.org_bucket_dict[each.key]["bucket_name"]
   role   = "roles/storage.objectViewer"
   member = "serviceAccount:${var.foundation_admin_sa[each.key].email}"
 }
 
 resource "google_storage_bucket_iam_member" "tfstate_bucket_modify" {
   for_each = var.foundations
-  bucket = local.tf_bucket_name
+
+  project = local.cosmos_project
+  bucket = local.org_bucket_dict[each.key]["bucket_name"]
   role   = "roles/storage.objectAdmin"
   member = "serviceAccount:${var.foundation_admin_sa[each.key].email}"
 
