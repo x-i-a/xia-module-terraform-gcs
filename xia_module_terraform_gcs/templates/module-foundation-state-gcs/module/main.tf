@@ -52,7 +52,6 @@ resource "github_actions_variable" "action_var_tf_bucket" {
 resource "google_storage_bucket_iam_member" "tfstate_bucket_list" {
   for_each = var.foundations
 
-  project = local.cosmos_project
   bucket = local.org_bucket_dict[each.key]["bucket_name"]
   role   = "roles/storage.objectViewer"
   member = "serviceAccount:${var.foundation_admin_sa[each.key].email}"
@@ -61,7 +60,6 @@ resource "google_storage_bucket_iam_member" "tfstate_bucket_list" {
 resource "google_storage_bucket_iam_member" "tfstate_bucket_modify" {
   for_each = var.foundations
 
-  project = local.cosmos_project
   bucket = local.org_bucket_dict[each.key]["bucket_name"]
   role   = "roles/storage.objectAdmin"
   member = "serviceAccount:${var.foundation_admin_sa[each.key].email}"
