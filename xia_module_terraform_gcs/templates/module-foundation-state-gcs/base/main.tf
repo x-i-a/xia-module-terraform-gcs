@@ -15,7 +15,7 @@ module "module_foundation_state_gcs" {
 
   source = "../../modules/module-foundation-state-gcs"
 
-  config_file = "../../../config/core/tfstate.yaml"
+  config_file = "../../../config/core/foundation_tfstate.yaml"
   landscape = local.landscape
   modules = local.modules
   foundations = local.foundations

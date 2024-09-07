@@ -1,5 +1,5 @@
 backend: gcs
-# tf_bucket:
+# default_tf_bucket:
 # org_buckets:
 #   xia-test-bucket:
 #     bucket_project:

@@ -12,7 +12,7 @@ terraform {
 locals {
   module_name = coalesce(var.module_name, basename(path.module))
   tfstate_config = yamldecode(file(var.config_file))
-  tf_bucket_name = local.tfstate_config["tf_bucket"]
+  tf_bucket_name = local.tfstate_config["default_tf_bucket"]
   cosmos_project = var.landscape["settings"]["cosmos_project"]
 }
 
