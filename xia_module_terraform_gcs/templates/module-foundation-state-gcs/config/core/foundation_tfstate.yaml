@@ -5,5 +5,5 @@ backend: gcs
 #     bucket_project:
 #     bucket_region: eu
 #     bucket_orgs:
-#      - <realm>/<foundation>
+#      - . # . means default value, could use any starting part of <realm>/<foundation> as match pattern
 

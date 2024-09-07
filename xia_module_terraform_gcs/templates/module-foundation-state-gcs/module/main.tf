@@ -35,7 +35,7 @@ locals {
 resource "google_storage_bucket" "foundation_buckets" {
   for_each = local.bucket_config
 
-  project = local.cosmos_project
+  project = lookup(each.value, "bucket_project", local.cosmos_project)
   name = each.key
   location = lookup(each.value, "bucket_region", "eu")
   force_destroy = false
