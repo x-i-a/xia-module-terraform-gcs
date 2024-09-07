@@ -38,6 +38,7 @@ resource "google_storage_bucket" "foundation_buckets" {
   project = lookup(each.value, "bucket_project", local.cosmos_project)
   name = each.key
   location = lookup(each.value, "bucket_region", "eu")
+  uniform_bucket_level_access = true
   force_destroy = false
 }
 
