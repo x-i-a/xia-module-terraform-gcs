@@ -55,6 +55,8 @@ resource "google_storage_bucket_iam_member" "tfstate_bucket_list" {
   bucket = local.org_bucket_dict[each.key]["bucket_name"]
   role   = "roles/storage.objectViewer"
   member = "serviceAccount:${var.foundation_admin_sa[each.key].email}"
+
+  depends_on = [google_storage_bucket.foundation_buckets]
 }
 
 resource "google_storage_bucket_iam_member" "tfstate_bucket_modify" {
@@ -69,4 +71,6 @@ resource "google_storage_bucket_iam_member" "tfstate_bucket_modify" {
     description = "Grants access to objects of foundation directory"
     expression  = "resource.name.startsWith('projects/_/buckets/${local.tf_bucket_name}/objects/${each.value.parent}/_/${each.value.name}/_/')"
   }
+
+  depends_on = [google_storage_bucket.foundation_buckets]
 }
