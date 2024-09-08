@@ -13,6 +13,6 @@ class GcsBackend(Module):
             var_dict (dict): Repository Variable Dictionary
             **kwargs: Parameter to be used for configuration file changes
         """
-        print(self.module_name)
+        repo_dict, var_dict = (repo_dict or {}), (var_dict or {})
         config_file, config_dir = self.get_config_file_path()
-        print(config_file, config_dir)
+        print(repo_dict, var_dict)
