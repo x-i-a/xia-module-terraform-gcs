@@ -15,4 +15,9 @@ class GcsBackend(Module):
         """
         repo_dict, var_dict = (repo_dict or {}), (var_dict or {})
         config_file, config_dir = self.get_config_file_path()
-        print(repo_dict, var_dict)
+        if "tf_bucket_name" in var_dict:
+            tf_bucket_name = var_dict["tf_bucket_name"]
+            tfstate_replace_dict = {
+                "tf_bucket:": f"tf_bucket: {tf_bucket_name}\n",
+            }
+            self._config_replace(config_file, tfstate_replace_dict)
