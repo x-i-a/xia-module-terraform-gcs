@@ -8,7 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: prd
     permissions:
       contents: read
       id-token: write
@@ -35,6 +34,7 @@ jobs:
       name: Apply Terraform
       uses: x-i-a/action-gcs-terraform-apply@main
       with:
+        tf_bucket_name: ${{ vars.tf_bucket_name }}
         cosmos_name: ${{ vars.cosmos_name }}
         realm_name: ${{ vars.realm_name }}
         foundation_name: ${{ vars.foundation_name }}
