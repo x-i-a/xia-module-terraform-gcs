@@ -13,9 +13,18 @@ locals {
   module_name = coalesce(var.module_name, basename(path.module))
   cosmos_project = var.landscape["settings"]["cosmos_project"]
   cosmos_bucket_name = var.landscape["settings"]["bucket_name"]
+  cosmos_bucket_region = var.landscape["settings"]["bucket_region"]
 }
 
 locals {
+  bucket_config = merge([
+    for foundation, foundation_details in var.foundations : {
+      (foundation_details.bucket_name != null ? foundation_details.bucket_name : local.cosmos_bucket_name) = {
+        bucket_project = local.cosmos_bucket_name
+        bucket_region = local.cosmos_bucket_region
+      }
+    }
+  ]...)
   foundation_buckets = {
     for foundation, foundation_details in var.foundations : foundation => {
       bucket_name = lookup(foundation_details, "bucket_name", local.cosmos_bucket_name)
@@ -23,6 +32,15 @@ locals {
   }
 }
 
+resource "google_storage_bucket" "foundation_buckets" {
+  for_each = local.bucket_config
+
+  project = each.value["bucket_project"]
+  name = each.key
+  location = each.value["bucket_region"]
+  uniform_bucket_level_access = true
+  force_destroy = false
+}
 
 resource "github_actions_variable" "action_var_tf_bucket" {
   for_each = var.foundations
