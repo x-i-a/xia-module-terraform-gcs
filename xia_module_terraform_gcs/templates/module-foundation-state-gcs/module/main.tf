@@ -20,10 +20,10 @@ locals {
   bucket_config = merge([
     for foundation, foundation_details in var.foundations : {
       (try(foundation_details.bucket_name, local.cosmos_bucket_name)) = {
-        bucket_project = local.cosmos_bucket_name
+        bucket_project = local.cosmos_project
         bucket_region = local.cosmos_bucket_region
       }
-    }
+    } if try(foundation_details.bucket_name, local.cosmos_bucket_name) != local.cosmos_bucket_name
   ]...)
   foundation_buckets = {
     for foundation, foundation_details in var.foundations : foundation => {
