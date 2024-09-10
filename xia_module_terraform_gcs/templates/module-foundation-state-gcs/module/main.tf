@@ -19,7 +19,7 @@ locals {
 locals {
   bucket_config = merge([
     for foundation, foundation_details in var.foundations : {
-      (foundation_details.bucket_name != null ? foundation_details.bucket_name : local.cosmos_bucket_name) = {
+      (try(foundation_details.bucket_name, local.cosmos_bucket_name)) = {
         bucket_project = local.cosmos_bucket_name
         bucket_region = local.cosmos_bucket_region
       }
